@@ -1,0 +1,58 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+def create_time_steps(length):
+    """Generates a time step array."""
+    return np.arange(length)
+
+def show_plot(plot_data, delta, title, marker_sizes=None, show_grid=True):
+    """
+    Plots historical data, true future values, and model predictions.
+    
+    Parameters:
+    - plot_data: List of numpy arrays for plotting.
+    - delta: Integer indicating future time steps to plot.
+    - title: Title for the plot.
+    - marker_sizes: List of sizes for each marker (optional).
+    - show_grid: Boolean to show grid (default is True).
+    
+    Returns:
+    - matplotlib.pyplot object for further customization.
+    """
+    labels = ['History', 'True Future', 'Model Prediction']
+    markers = ['.-', 'rx', 'go']
+    time_steps = create_time_steps(plot_data[0].shape[0])
+    future_steps = create_time_steps(len(plot_data[1])) + len(plot_data[0])
+    
+    plt.figure(figsize=(10, 6))
+    plt.title(title)
+    
+    # Plot historical data
+    plt.plot(time_steps, plot_data[0].flatten(), markers[0], label=labels[0])
+    
+    # Plot true future values
+    plt.plot(future_steps, plot_data[1], markers[1], markersize=marker_sizes[1] if marker_sizes else 10, label=labels[1])
+    
+    # Plot model predictions
+    plt.plot(future_steps, plot_data[2], markers[2], markersize=marker_sizes[2] if marker_sizes else 10, label=labels[2])
+    
+    plt.legend()
+    plt.xlim([0, len(plot_data[0]) + len(plot_data[1]) + 1])
+    plt.xlabel('Time-Step')
+    
+    if show_grid:
+        plt.grid()
+    
+    return plt
+
+# Sample Data
+history = np.array([10, 12, 15, 18, 20])
+true_future = np.array([22, 24])
+model_prediction = np.array([21, 23])
+
+# Prepare data for plotting
+plot_data = [history, true_future, model_prediction]
+
+# Call the show_plot function
+plt = show_plot(plot_data, delta=2, title='Weather Predictions', marker_sizes=[5, 7, 9])
+plt.show()
